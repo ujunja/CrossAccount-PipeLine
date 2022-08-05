@@ -1,5 +1,9 @@
 version: 0.2
-
+env:
+  parameter-store:
+    keyid: "kms-value"
+  exported-variables:
+    - keyid
 phases:
   pre_build:
     commands:
@@ -9,9 +13,9 @@ phases:
       # - aws cloudformation package --template template.yaml --s3-bucket $S3_BUCKET --output-template-file template-export.yml
       # - aws cloudformation deploy --template-file template-export.yml --s3-bucket $S3_BUCKET --stack-name $STACKNAME --capabilities CAPABILITY_IAM --region $REGION --parameter-overrides Env=$ENV
       - sam build
-      - sam package --s3-bucket eyes-sam-package-template-lswn --output-template-file main-package.yaml
+      - sam package --s3-bucket codepipeline-ap-southeast-1-872854859043 --kms-key-id $keyid --output-template-file package-template.yaml
       # - sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
 artifacts:
   discard-paths: true
   files:
-    - main-package.yaml
+    - package-template.yaml
